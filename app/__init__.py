@@ -12,3 +12,5 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from app.models.user import User, UserProfile
+from app.models.colab import ColabRole, Colab, EventColab
+from app.models.event import UnciEvent, SubEvent

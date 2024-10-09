@@ -15,7 +15,7 @@ class User(db.Model):
 class UserProfile(db.Model):
     __tablename__ = 'profiles'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True, nullable=False)
     name = Column(String(120), nullable=False)
     profile_img = Column(String(250), nullable=True)
     confirmed = Column(Boolean, default=False, nullable=False)
