@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
-from app.models.user import User, UserProfile
+from app.models.user import User, UserType, UserProfile
 from app.models.colab import ColabRole, Colab, EventColab
 from app.models.event import UnciEvent, SubEvent
 
