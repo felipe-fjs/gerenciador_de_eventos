@@ -1,5 +1,6 @@
 from app import db, bcrypt
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, event
+from flask_login import UserMixin
 import datetime
 
 
@@ -7,7 +8,7 @@ def current_time():
     return datetime.datetime.now(datetime.timezone.utc)
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     """Modelo para CRUD de usuários
         Variáveis existentes:
         - email

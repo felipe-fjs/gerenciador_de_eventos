@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% set messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+                {{ message }}
+        {% endfor %}
+        
+    {% endif %}
+    <h1>Novo evento</h1>
+    <form action="{{ url_for('event.new')}}" method="post">
+        <p>
+            <label for="title">Título</label>
+            <input type="text" name="title" id="title" max="180" required>
+        </p>
+        <p>
+            <label for="desc">Descrição</label>
+            <input type="text" name="desc" id="desc" required>
+        </p>
+        <p>
+            <label for="slug">Sigla e ano:</label>
+            <input type="text" name="slug" id="slug" required>
+        </p>
+        <p>
+            <label for="start">Começa em:</label>
+            <input type="datetime-local" name="start" id="start">
+        </p>
+        <p>
+            <label for="end">termina em:</label>
+            <input type="datetime-local" name="end" id="end">
+        </p>
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html>

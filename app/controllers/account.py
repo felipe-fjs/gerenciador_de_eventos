@@ -1,13 +1,19 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.user import User, UserProfile
-from app import bcrypt, db
+from app import bcrypt, db, login_manager
+from flask_login import login_required, logout_user, login_user
 
 account_route = Blueprint('account', __name__)
 
 
 def send_email_confirmation():
     pass
+
+
+@login_manager.user_loader
+def get_user(id):
+    return User.query.filter_by(id=id).first()
 
 
 @account_route.route('/signup', methods=['POST', 'GET'])
@@ -61,9 +67,19 @@ def login():
             return redirect(url_for('account.login'))
         
         # logar usuário
+        login_user(user)
+    
         return redirect(url_for('home')) # colocar redirect para home dos eventos
         
-    return render_template('')
+    return render_template('account/login.html')
+
+
+@account_route.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Você foi deslogado com sucesso!")
+    return redirect(url_for('account.login'))
 
 
 @account_route.route('/solicitar-nova-senha')

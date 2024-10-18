@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if sub_events %}
+        {% for sub_event in sub_events %}
+            {{ sub_event }}
+        {% endfor %}
+    {% else %}
+        <h1>Nenhum sub_evento ainda foi cadastrado!</h1>
+    {% endif %}
+</body>
+</html>

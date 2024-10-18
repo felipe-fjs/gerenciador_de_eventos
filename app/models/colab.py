@@ -23,11 +23,19 @@ class Colab(db.Model):
     active = Column(Boolean(), nullable=False, default=True)
 
 
+class ColabArea(db.Model):
+    __tablename__ = 'colab_areas'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(60), unique=True, nullable=False)
+
+
 class EventColab(db.Model):
     __tablename__ = 'event_colabs'
 
     id = Column(Integer, primary_key=True)
     role = Column(Integer, ForeignKey('colab_roles.id'), nullable=False)
+    area = Column(Integer, ForeignKey('colab_areas.id'), nullable=False)
     colab_id = Column(Integer, ForeignKey('colabs.id'), nullable=False)
     event_id = Column(Integer, ForeignKey('events.id'), nullable=False)
 
