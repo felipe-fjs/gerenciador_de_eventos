@@ -48,4 +48,3 @@ def edit(subevent_id):
 @sub_event_route.route('/<event_id>/<subevent_id>/delete')
 def delete(subevent_id):
     pass
-

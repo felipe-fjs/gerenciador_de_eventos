@@ -1,7 +1,9 @@
 from app import app, db
 from flask import Blueprint, flash, redirect, url_for, render_template, request, jsonify
+from flask_login import current_user
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.event import UnciEvent, SubEvent
+from app.models.colab import EventColab
 from datetime import datetime
 
 event_route = Blueprint('event', __name__)
@@ -49,12 +51,15 @@ def new():
         flash(f"Evento {new_event.title} cadastrado com sucesso!")
         return redirect(url_for('event.new'))
 
-    return render_template('event/new.html')
+    return render_template('event/admin/new.html')
 
 
 @event_route.route('/<event_id>')
 # @admin_or_above ou @coor_required
 def home(event_id):
+    if EventColab.query.filter_by(id=current_user.id).first().role_str() == 'admin':
+        return redirect(url_for('event.admin_home'))
+
     if not UnciEvent.query.filter_by(id=event_id).first():
         flash("Nenhum evento foi encontrado com esse id!")
         return redirect(url_for('home'))
@@ -66,6 +71,17 @@ def home(event_id):
         return redirect(url_for('event.home'))
     
     return render_template('event/event_home.html', sub_events=sub_events)
+
+
+@event_route.route('/<event_id>/admin_home')
+# @admin_or_above
+def admin_home(event_id):
+    try:
+        event_title = UnciEvent.query.filter_by(id=event_id).first().title
+    except SQLAlchemyError:
+        flash("Ocorreu um erro ao acessar informações do evento.")
+        event_title = "Evento"
+    return render_template('event/admin/admin_home.html', event_title=event_title)
 
 
 @event_route.route('/<event_id>/edit', methods=['GET', 'PUT'])
@@ -100,7 +116,7 @@ def edit(event_id):
         flash('Ocorreu um erro ao acessar as informações do evento! Se persistir, consulte o setor de T.I!')
         return redirect(url_for('event.home', event_id=event_id))
 
-    return render_template('event/edit.html', event=event)
+    return render_template('event/admin/edit.html', event=event)
 
 
 @event_route.route('/<event_id>/deletar', methods=['GET','DELETE'])
@@ -124,7 +140,7 @@ def delete(event_id):
         flash("Ocorreu um erro ao tentar acessar as informações do evento para sua exclusão! Caso persista, procucar setor de T.I!")
         return redirect(url_for('event.home', event_id=event_id))
     
-    return render_template('event/delete.html', event=delete_event)
+    return render_template('event/admin/delete.html', event=delete_event)
 
 """ 
 OK    * /inicio (get) : carrega os eventos que estão ativos 

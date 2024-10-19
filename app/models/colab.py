@@ -41,6 +41,8 @@ class EventColab(db.Model):
 
     __table_args__ = (UniqueConstraint('colab_id', 'event_id', name="colab_already_in_this_event"),)
 
+    def role_str(self):
+        return ColabRole.query.filter_by(id=self.role).first().role
 
 class SubEventColab(db.Model):
     __tablename__ = 'sub_event_colabs'
