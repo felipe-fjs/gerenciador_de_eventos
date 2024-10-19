@@ -1,5 +1,5 @@
 from app import app, db
-from flask import Blueprint, flash, redirect, url_for, render_template, request
+from flask import Blueprint, flash, redirect, url_for, render_template, request, jsonify
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.event import UnciEvent, SubEvent
 from datetime import datetime
@@ -107,18 +107,31 @@ def edit(event_id):
 # @coor_required
 def delete(event_id):
     if request.method == 'DELETE':
-        pass
+        try:
+            delete_event = UnciEvent.query.filter_by(id=event_id).first()
+            db.session.delete(delete_event)
+            db.session.commit()
+        except SQLAlchemyError:
+            flash("Ocorreu um erro ao tentar deletar um evento... se persistir, procure o setor de T.I!")
+            return jsonify(deleted=False)
+
+        return jsonify(deleted=True)
 
     # aqui será executada uma mensagem para confirmar a exclusão do evento
-
-    return render_template('event/delete.html')
+    try:
+        delete_event = UnciEvent.query.filter_by(id=event_id).first()
+    except SQLAlchemyError:
+        flash("Ocorreu um erro ao tentar acessar as informações do evento para sua exclusão! Caso persista, procucar setor de T.I!")
+        return redirect(url_for('event.home', event_id=event_id))
+    
+    return render_template('event/delete.html', event=delete_event)
 
 """ 
 OK    * /inicio (get) : carrega os eventos que estão ativos 
 
-    * /novo_evento (get e post): criar um novo evento [coor_required ou feito à mão no mysql]
+OK    * /novo_evento (get e post): criar um novo evento [coor_required ou feito à mão no mysql]
 OK    * /nome_evento (get): carrega as informações do evento
-    * /nome_evento/editar (get e put): edita as informações DO EVENTO EM SI
-    * /nome_evento/deletar (delete): realiza a exclusão (ou suspensão) de um evento  [talvez deixe para ser feito pelos técnicos]
+OK    * /nome_evento/editar (get e put): edita as informações DO EVENTO EM SI
+OK    * /nome_evento/deletar (delete): realiza a exclusão (ou suspensão) de um evento  [talvez deixe para ser feito pelos técnicos]
 
 """

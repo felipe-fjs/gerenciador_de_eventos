@@ -91,3 +91,7 @@ def reset_pwd():
 def new_pwd():
     pass
 
+
+@account_route.route('/qrcode')
+def qrcode():
+    pass

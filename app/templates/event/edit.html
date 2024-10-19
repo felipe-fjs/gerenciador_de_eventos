@@ -7,5 +7,28 @@
 </head>
 <body>
     <h1>Editar o evento "{{ event.title }}"</h1>
+    <form action="{{ url_for('event.edit', event_id=event.id) }}" method="post">
+        <p>
+            <label for="title">Título:</label>
+            <input type="text" name="title" id="title" value="{{ event.title }}" max="60" required>
+        </p>
+        <p>
+            <label for="desc">Descrição do evento:</label>
+            <textarea name="desc" id="desc">{{ event.desc }}</textarea>
+        </p>
+        <p>
+            <label for="slug">Slug (sigla+ano do evento): </label>
+            <input type="text" name="slug" id="slug" value="{{ event.slug }}" required>
+        </p>
+        <p>
+            <label for="start">Começa em:</label>
+            <input type="datetime-local" name="start" id="start" required>
+        </p>
+        <p>
+            <label for="end">Termina em:</label>
+            <input type="datetime-local" name="end" id="end" required>
+        </p>
+        <button type="submit">Atualizar</button>
+    </form>
 </body>
 </html>
