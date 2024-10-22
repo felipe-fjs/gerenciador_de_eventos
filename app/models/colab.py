@@ -20,6 +20,7 @@ class Colab(db.Model):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
+    is_coor = Column(Boolean(), nullable=False, default=False)
     active = Column(Boolean(), nullable=False, default=True)
 
 
