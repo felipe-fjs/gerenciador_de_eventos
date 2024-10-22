@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from sqlalchemy.exc import SQLAlchemyError
-from app.models.user import User, UserProfile
+from app.models.user import User, UserProfile, UserType
 from app import bcrypt, db, login_manager
 from flask_login import login_required, logout_user, login_user
+
 
 account_route = Blueprint('account', __name__)
 
@@ -23,38 +24,37 @@ def signup():
             flash('Email já cadastrado!')
             return redirect(url_for('account.signup'))
         
-        new_user = User(email=request.form.get('email'), 
-                        pwd=bcrypt.generate_password_hash(request.form.get('pwd')).decode('utf-8'))
         try:
-            with db:
-                db.session.add(new_user)
-                db.session.commit()
+            new_user = User(email=request.form.get('email'), 
+                            pwd=bcrypt.generate_password_hash(request.form.get('pwd')).decode('utf-8'))
+            db.session.add(new_user)
+            db.session.flush()
+            print(f"ID DO USUÀRIO: {new_user.id}")
+            new_user_profile = UserProfile(user_id=new_user.id, 
+                                        first_name=request.form.get('first-name'),
+                                        last_name=request.form.get('last-name'),
+                                        user_type=1,
+                                        curso=request.form.get('curso'),
+                                            )
+            db.session.add(new_user_profile)
+            db.session.commit()
         except SQLAlchemyError as error:
             flash(f'Ocorreu um erro ao criar sua conta! {error}')
             db.session.rollback()
             return redirect(url_for('account.signup'))
 
-        # trecho para a criação do profile do usuário
-        new_user_profile = UserProfile(user_id=new_user.id, 
-                                       first_name=request.form.get('fist-name'),
-                                       last_name=request.form.get('last-name'),
-                                       unci_student=request.form.get('unci_student'),
-                                       matricula=request.form.get('matricula'),
-                                       curso=request.form.get('curso'),
-                                        )
-        try:
-            db.session.add(new_user_profile)
-            db.session.commit()
-        except SQLAlchemyError:
-            flash("ERRO AO CRIAR PERFIL DE USUÁRIO")
-            return redirect(url_for('account.login'))
-
         # parte para envio de email, tentar aplicar de forma assincrona ou fila de tarefas (rabbit ou algo do tipo)
+        return redirect(url_for('account.login'))
 
-    return render_template("account/signup.html")
+    try:
+        user_types = UserType.query.all()
+    except SQLAlchemyError:
+        user_types= "Não foi possivel recureperar os tipos. Editar no perfil depois!"
+
+    return render_template("account/signup.html", user_types=user_types)
 
 
-@account_route.route('/login')
+@account_route.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         if not User.query.filter_by(email=request.form.get('email')).first():
@@ -93,5 +93,6 @@ def new_pwd():
 
 
 @account_route.route('/qrcode')
+@login_required
 def qrcode():
     pass

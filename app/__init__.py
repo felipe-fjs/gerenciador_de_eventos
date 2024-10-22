@@ -21,5 +21,9 @@ from app.models.event import UnciEvent, SubEvent
 
 from app.controllers.account import account_route
 from app.controllers.event import event_route
+from app.controllers.sub_event import sub_event_route
+from app.controllers.colab import colab_route
 app.register_blueprint(account_route, url_prefix='/account')
 app.register_blueprint(event_route)
+app.register_blueprint(sub_event_route)
+app.register_blueprint(colab_route)

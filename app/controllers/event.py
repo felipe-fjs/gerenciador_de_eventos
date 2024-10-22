@@ -1,15 +1,31 @@
 from app import app, db
 from flask import Blueprint, flash, redirect, url_for, render_template, request, jsonify
-from flask_login import current_user
+from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.event import UnciEvent, SubEvent
-from app.models.colab import EventColab
+from app.models.colab import EventColab, Colab
+from app.controllers.decorators.roles import admin_or_above
+from .sub_event import sub_event_route
+from .colab import colab_route
 from datetime import datetime
 
 event_route = Blueprint('event', __name__)
 
+""" 
+OK    * /inicio (get) : carrega os eventos que estão ativos 
 
+OK    * /novo_evento (get e post): criar um novo evento [coor_required ou feito à mão no mysql]
+OK    * /nome_evento (get): carrega as informações do evento
+OK    * /nome_evento/editar (get e put): edita as informações DO EVENTO EM SI
+OK    * /nome_evento/deletar (delete): realiza a exclusão (ou suspensão) de um evento  [talvez deixe para ser feito pelos técnicos]
 
+"""
+
+def is_admin_or_coor(event_id):
+    if Colab.query.filter_by(user_id=current_user.id).first().is_coor() or EventColab.query.filter_by(user_id=current_user.id, event_id=event_id).first().role == 3:
+        return True
+
+@app.route('/')
 @app.route('/inicio')
 def home():
     try:
@@ -28,8 +44,9 @@ def home():
 
 
 @event_route.route('/novo_evento', methods=['GET', 'POST'])
-# decorador para verificar se é um admin
-def new():
+@login_required
+@admin_or_above
+def event_new():
     if request.method == 'POST':
         if UnciEvent.query.filter_by(slug=request.form.get('slug')).first():
             flash('Slug de evento já registrado!')
@@ -55,10 +72,10 @@ def new():
 
 
 @event_route.route('/<event_id>')
-# @admin_or_above ou @coor_required
-def home(event_id):
-    if EventColab.query.filter_by(id=current_user.id).first().role_str() == 'admin':
-        return redirect(url_for('event.admin_home'))
+def event_home(event_id):
+    if current_user.is_authenticated:
+        if is_admin_or_coor(event_id=event_id):
+            return redirect(url_for('event.admin_home'))
 
     if not UnciEvent.query.filter_by(id=event_id).first():
         flash("Nenhum evento foi encontrado com esse id!")
@@ -74,8 +91,9 @@ def home(event_id):
 
 
 @event_route.route('/<event_id>/admin_home')
-# @admin_or_above
-def admin_home(event_id):
+@login_required
+@admin_or_above
+def event_admin_home(event_id):
     try:
         event_title = UnciEvent.query.filter_by(id=event_id).first().title
     except SQLAlchemyError:
@@ -85,8 +103,9 @@ def admin_home(event_id):
 
 
 @event_route.route('/<event_id>/edit', methods=['GET', 'PUT'])
-# @admin_or_above ou @coor_required
-def edit(event_id):
+@login_required
+@admin_or_above
+def event_edit(event_id):
     if request.method == 'PUT':
         try:
             edit_event = UnciEvent.query.filter_by(id=event_id).first()
@@ -120,8 +139,9 @@ def edit(event_id):
 
 
 @event_route.route('/<event_id>/deletar', methods=['GET','DELETE'])
-# @coor_required
-def delete(event_id):
+@login_required
+@admin_or_above
+def event_delete(event_id):
     if request.method == 'DELETE':
         try:
             delete_event = UnciEvent.query.filter_by(id=event_id).first()
@@ -142,12 +162,6 @@ def delete(event_id):
     
     return render_template('event/admin/delete.html', event=delete_event)
 
-""" 
-OK    * /inicio (get) : carrega os eventos que estão ativos 
 
-OK    * /novo_evento (get e post): criar um novo evento [coor_required ou feito à mão no mysql]
-OK    * /nome_evento (get): carrega as informações do evento
-OK    * /nome_evento/editar (get e put): edita as informações DO EVENTO EM SI
-OK    * /nome_evento/deletar (delete): realiza a exclusão (ou suspensão) de um evento  [talvez deixe para ser feito pelos técnicos]
 
-"""
+
