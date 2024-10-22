@@ -6,7 +6,6 @@ from flask_login import current_user
 def colab_or_above(f):
     @wraps(f)
     def decored_function(*args, **kwargs):
-        event_id = kwargs.get('event_id')
         if not (EventColab.query.filter_by(user_id=current_user.id, event_id=event_id).first() and EventColab.query.filter_by(user_id=current_user.id).first().active) or not Colab.query.filter_by(user_id=current_user.id).is_coor:
             flash("Você precisa de permissão de colaborador, no mínimo, para acessar esse link!")
             return redirect(url_for('home'))
