@@ -19,7 +19,7 @@ class Colab(db.Model):
     __tablename__ = 'colabs'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False, unique=True)
     is_coor = Column(Boolean(), nullable=False, default=False)
     active = Column(Boolean(), nullable=False, default=True)
 
@@ -37,10 +37,10 @@ class EventColab(db.Model):
     id = Column(Integer, primary_key=True)
     role = Column(Integer, ForeignKey('colab_roles.id'), nullable=False)
     area = Column(Integer, ForeignKey('colab_areas.id'), nullable=False)
-    colab_id = Column(Integer, ForeignKey('colabs.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     event_id = Column(Integer, ForeignKey('events.id'), nullable=False)
 
-    __table_args__ = (UniqueConstraint('colab_id', 'event_id', name="colab_already_in_this_event"),)
+    __table_args__ = (UniqueConstraint('user_id', 'event_id', name="colab_already_in_this_event"),)
 
     def role_str(self):
         return ColabRole.query.filter_by(id=self.role).first().role

@@ -4,9 +4,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.event import UnciEvent, SubEvent
 from app.models.colab import EventColab, Colab
-from app.controllers.decorators.roles import admin_or_above
-from .sub_event import sub_event_route
-from .colab import colab_route
+from app.controllers.decorators.roles import admin_or_above, coor_required
 from datetime import datetime
 
 event_route = Blueprint('event', __name__)
@@ -45,7 +43,7 @@ def home():
 
 @event_route.route('/novo_evento', methods=['GET', 'POST'])
 @login_required
-@admin_or_above
+@coor_required
 def event_new():
     if request.method == 'POST':
         if UnciEvent.query.filter_by(slug=request.form.get('slug')).first():
@@ -93,7 +91,7 @@ def event_home(event_id):
 @event_route.route('/<event_id>/admin_home')
 @login_required
 @admin_or_above
-def event_admin_home(event_id):
+def event_home_admin(event_id):
     try:
         event_title = UnciEvent.query.filter_by(id=event_id).first().title
     except SQLAlchemyError:

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.user import User, UserProfile, UserType
+from app.models.colab import Colab, EventColab
 from app import bcrypt, db, login_manager
 from flask_login import login_required, logout_user, login_user
 
@@ -33,7 +34,7 @@ def signup():
             new_user_profile = UserProfile(user_id=new_user.id, 
                                         first_name=request.form.get('first-name'),
                                         last_name=request.form.get('last-name'),
-                                        user_type=1,
+                                        user_type=request.form.get('user_type'),
                                         curso=request.form.get('curso'),
                                             )
             db.session.add(new_user_profile)
@@ -68,7 +69,11 @@ def login():
         
         # logar usuário
         login_user(user)
-    
+        if Colab.query.filter_by(user_id=user.id).first():
+            # redireciona para o inicio dos coordenadores
+            if Colab.query.filter_by(user_id=user.id).first().is_coor:
+                return redirect(url_for('coor.coor_home'))
+            
         return redirect(url_for('home')) # colocar redirect para home dos eventos
         
     return render_template('account/login.html')

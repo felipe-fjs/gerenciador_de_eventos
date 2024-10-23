@@ -50,13 +50,13 @@ class UserProfile(db.Model):
     __tablename__ = 'profiles'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'),
+    user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"),
                      unique=True, nullable=False)
     first_name = Column(String(120), nullable=False, default="Primeiro nome")
     last_name = Column(String(120), nullable=False, default='Sobrenome')
     profile_img = Column(String(250), nullable=False, default='no image')
     confirmed = Column(Boolean, default=False, nullable=False)
-    user_type = Column(Integer, ForeignKey("user_types.id"), nullable=False)
+    user_type = Column(Integer, ForeignKey("user_types.id"), nullable=True)
     curso = Column(String(100), nullable=True, default='não aluno')
     active = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime(), default=current_time, nullable=False)

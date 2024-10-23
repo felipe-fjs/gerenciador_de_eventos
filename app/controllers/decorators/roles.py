@@ -42,7 +42,13 @@ def admin_or_above(f):
 def coor_required(f):
     @wraps(f)
     def decored_function(*args, **kwargs):
-        if not Colab.query.filter_by(user_id=current_user.id).is_coor:
+        # if not Colab.query.filter_by(user_id=current_user.id).first():
+        #     flash()
+        #     if not Colab.query.filter_by(user_id=current_user.id).first().is_coor:
+        #         pass
+
+
+        if Colab.query.filter_by(user_id=current_user.id).first() and not Colab.query.filter_by(user_id=current_user.id).first().is_coor:
             flash("Você precisa de permissão de Coordenador, no mínimo, para acessar esse link!")
             return redirect(url_for('home'))
         return f(*args, **kwargs)

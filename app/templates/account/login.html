@@ -6,6 +6,12 @@
     <title>LOGIN</title>
 </head>
 <body>
+    {% set messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message}}
+        {% endfor %}
+    {% endif %}
     <form action="{{ url_for('account.login' )}}" method="post">
         <p>
             <label for="email">Email: </label>
