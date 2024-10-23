@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.user import User, UserProfile, UserType
-from app.models.colab import Colab, EventColab
+from app.models.colab import Colab
 from app import bcrypt, db, login_manager
-from flask_login import login_required, logout_user, login_user
+from flask_login import login_required, logout_user, login_user, current_user
 
 
 account_route = Blueprint('account', __name__)
@@ -75,7 +75,8 @@ def login():
                 return redirect(url_for('coor.coor_home'))
             
         return redirect(url_for('home')) # colocar redirect para home dos eventos
-        
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     return render_template('account/login.html')
 
 

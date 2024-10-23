@@ -20,7 +20,7 @@ OK    * /nome_evento/deletar (delete): realiza a exclusão (ou suspensão) de um
 """
 
 def is_admin_or_coor(event_id):
-    if Colab.query.filter_by(user_id=current_user.id).first().is_coor() or EventColab.query.filter_by(user_id=current_user.id, event_id=event_id).first().role == 3:
+    if Colab.query.filter_by(user_id=current_user.id).first().is_coor or EventColab.query.filter_by(user_id=current_user.id, event_id=event_id).first().role == 3:
         return True
 
 @app.route('/')
@@ -73,7 +73,7 @@ def event_new():
 def event_home(event_id):
     if current_user.is_authenticated:
         if is_admin_or_coor(event_id=event_id):
-            return redirect(url_for('event.admin_home'))
+            return redirect(url_for('event.event_home_admin'))
 
     if not UnciEvent.query.filter_by(id=event_id).first():
         flash("Nenhum evento foi encontrado com esse id!")
@@ -88,7 +88,7 @@ def event_home(event_id):
     return render_template('event/event_home.html', sub_events=sub_events)
 
 
-@event_route.route('/<event_id>/admin_home')
+@event_route.route('/<int:event_id>/admin_home')
 @login_required
 @admin_or_above
 def event_home_admin(event_id):

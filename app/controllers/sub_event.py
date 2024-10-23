@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, url_for, render_template, request
 from flask_login import login_required
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.event import SubEvent, UnciEvent
-from app.controllers.decorators.roles import admin_or_above
+from app.controllers.decorators.roles import admin_or_above, colab_or_above
 
 
 sub_event_route = Blueprint('sub_event', __name__)
@@ -58,7 +58,9 @@ def sub_event_delete(subevent_id):
     pass
 
 
-@sub_event_route.route('/<event_id>/subevent_id>/scanner', methods=['GET','POST'])
-# @colab_or_above
-def scanner(event_id, subevent_id):
-    pass
+# @sub_event_route.route('/<event_id>/subevent_id>/scanner', methods=['GET','POST'])
+@sub_event_route.route('/scanner', methods=['GET','POST'])
+@login_required
+@colab_or_above
+def scanner():
+    return "<h1>Acesso ao scanner </h1>"
