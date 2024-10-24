@@ -39,7 +39,7 @@ def sub_event_home(event_id, subevent_id):
 @sub_event_route.route('/<event_id>/novo', methods=['GET','POST'])
 @login_required
 @admin_or_above
-def sub_event_new(event_id, subevent_id):
+def sub_event_new(event_id):
     if request.method == 'POST':
         pass
 
@@ -47,13 +47,13 @@ def sub_event_new(event_id, subevent_id):
 
 
 @sub_event_route.route('/<event_id>/<subevent_id>/editar')
-# @admin_or_above
+@admin_or_above
 def sub_event_edit(subevent_id):
     pass
 
 
 @sub_event_route.route('/<event_id>/<subevent_id>/delete')
-# @admin_or_above
+@admin_or_above
 def sub_event_delete(subevent_id):
     pass
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('event.event_new') }}">Novo evento</a>
+        <a href="{{ url_for('home')}}">Eventos Em andamento</a>
+        <a href="">Eventos encerrados</a>
+
+        <hr>
+        <a href="{{ url_for('coor.get_roles') }}">Ver níveis existentes</a>
+        <a href="{{ url_for('coor.new_role') }}">Nova Função/nível</a>
+        <a href="{{ url_for('coor.get_areas') }}">Ver áreas existentes</a>
+        <a href="{{ url_for('coor.new_area' ) }}">Nova Área</a>
+    </nav>
+</body>
+</html>

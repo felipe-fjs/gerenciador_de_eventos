@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% set messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+    {% endif %}
+    {% if areas %}
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>nome</th>
+                <th>ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for area in areas %}
+            <tr>
+                <td>{{ area.id }}</td>
+                <td>{{ area.name }}</td>
+                <td><a href="{{ url_for('coor.edit_area', area_id=area.id)}}">Editar</a></td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    <p>
+        <a href="{{ url_for('coor.new_area')}}">Registrar nova</a>
+    </p>
+    {% else %}
+    <h1>nenhum nível adicionado. <a href="{{ url_for('coor.new_area') }}">Adicione um</a></h1>
+    {% endif %}
+</body>
+
+</html>

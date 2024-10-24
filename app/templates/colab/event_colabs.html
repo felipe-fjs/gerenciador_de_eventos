@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Exibirá os colaboradores cadastrados no evento!</h1>
+    {% if colabs %}
+    <table>
+        <thead>
+            <tr>
+                <th>nome</th>
+                <th>Nível</th>
+                <th>Área</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for colab in colabs %}
+                    <tr>
+                        <td>{{ colab.name }}</td>
+                        <td>{{ colab.take_role() }}</td>
+                        <td>{{ colab.take_area() }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+          <h1>nenhum colaborador registrado. <a href="{{ url_for('colab.new_colab', event_id=event_id)}}">Registre</a></h1>
+        {% endif %}
+</body>
+</html>

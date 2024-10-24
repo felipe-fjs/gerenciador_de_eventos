@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="{{ url_for('coor.edit_area', area_id=area.id)}}" method="post">
+        <p>
+            <input type="hidden" name="area_id" value="{{ area.id }}">
+            <label for="area">Área:</label>
+            <input type="text" name="area" id="area" value="{{ area.name }}" required>
+        </p>
+        <button type="submit">atualizar</button>
+    </form>
+</body>
+</html>

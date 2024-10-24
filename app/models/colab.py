@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, event, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, event, UniqueConstraint, func
 import datetime
 
 
@@ -11,9 +11,19 @@ class ColabRole(db.Model):
 
     id = Column(Integer, primary_key=True)
     role = Column(String(60), nullable=False)
+    permission_level = Column(Integer, unique=True, nullable=False)
     created_at = Column(DateTime(), default=current_time, nullable=False)
     update_at = Column(DateTime(), default=current_time, nullable=False)
 
+    @classmethod
+    def next_permission_level(cls):
+        "Retorna o próximo valor inteiro da tabela de permissões de acesso"
+        quant_roles = db.session.query(func.count(cls.permission_level)).scalar()
+        return quant_roles + 1
+
+    def __init__(self, role):
+        self.role = role
+        self.permission_level = ColabRole.next_permission_level()
 
 class Colab(db.Model):
     __tablename__ = 'colabs'
@@ -42,8 +52,11 @@ class EventColab(db.Model):
 
     __table_args__ = (UniqueConstraint('user_id', 'event_id', name="colab_already_in_this_event"),)
 
-    def role_str(self):
+    def take_role(self):
         return ColabRole.query.filter_by(id=self.role).first().role
+    
+    def take_area(self):
+        return ColabArea.query.filter_by(id=self.area).first().name
 
 class SubEventColab(db.Model):
     __tablename__ = 'sub_event_colabs'

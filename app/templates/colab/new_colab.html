@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="{{ url_for('colab.new_colab', event_id=event_id)}}" method="post">
+        <input type="hidden" name="event_id" value="{{ event_id }}">
+        <p>
+            <label for="role">nível:</label>
+            <select name="role" id="role" required>
+                {% for role in roles %}
+                    <option value="{{ role.id }}">{{ role.role }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="area">Área:</label>
+            <select name="area" id="area" required>
+                {% for area in areas %}
+                    <option value="{{ area.id }}">{{ area.role }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="user_email">Email do usuário: </label>
+            <input type="email" name="user_email" id="user_email" required>
+        </p>
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html>

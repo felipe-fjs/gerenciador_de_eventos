@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.event import UnciEvent, SubEvent
 from app.models.colab import EventColab, Colab
-from app.controllers.decorators.roles import admin_or_above, coor_required
+from app.controllers.decorators.roles import admin_or_above, coor_required, there_is_coor, there_is_colab, colab_role
 from datetime import datetime
 
 event_route = Blueprint('event', __name__)
@@ -19,9 +19,11 @@ OK    * /nome_evento/deletar (delete): realiza a exclusão (ou suspensão) de um
 
 """
 
+
 def is_admin_or_coor(event_id):
-    if Colab.query.filter_by(user_id=current_user.id).first().is_coor or EventColab.query.filter_by(user_id=current_user.id, event_id=event_id).first().role == 3:
+    if there_is_coor() or (there_is_colab(event_id) and colab_role() == 3):
         return True
+
 
 @app.route('/')
 @app.route('/inicio')
@@ -30,7 +32,7 @@ def home():
         events = UnciEvent.query.all()
         events_active = []
         for event in events:
-            if event.end >= datetime.now()  :
+            if event.end >= datetime.now():
                 events_active.append(event)
         if not events_active:
             flash('Nenhum evento ativo!')
@@ -48,33 +50,29 @@ def event_new():
     if request.method == 'POST':
         if UnciEvent.query.filter_by(slug=request.form.get('slug')).first():
             flash('Slug de evento já registrado!')
-            return redirect(url_for('event.new'))
+            return redirect(url_for('event.event_new'))
 
         new_event = UnciEvent(title=request.form.get('title'),
                               desc=request.form.get('desc'),
                               slug=request.form.get('slug'),
                               start=request.form.get('start'),
                               end=request.form.get('end'))
-        
+
         try:
             db.session.add(new_event)
             db.session.commit()
         except SQLAlchemyError:
             flash('Ocorreu um erro ao tentar registrar o evento...')
             return redirect(url_for('home'))
-        
+
         flash(f"Evento {new_event.title} cadastrado com sucesso!")
-        return redirect(url_for('event.new'))
+        return redirect(url_for('event.event_new'))
 
     return render_template('event/admin/new.html')
 
 
 @event_route.route('/<event_id>')
 def event_home(event_id):
-    if current_user.is_authenticated:
-        if is_admin_or_coor(event_id=event_id):
-            return redirect(url_for('event.event_home_admin'))
-
     if not UnciEvent.query.filter_by(id=event_id).first():
         flash("Nenhum evento foi encontrado com esse id!")
         return redirect(url_for('home'))
@@ -83,21 +81,9 @@ def event_home(event_id):
         sub_events = SubEvent.query.filter_by(event_id=event_id).all()
     except SQLAlchemyError:
         flash("Ocorreu um erro ao acessar o evento.")
-        return redirect(url_for('event.home'))
-    
-    return render_template('event/event_home.html', sub_events=sub_events)
+        return redirect(url_for('home'))
 
-
-@event_route.route('/<int:event_id>/admin_home')
-@login_required
-@admin_or_above
-def event_home_admin(event_id):
-    try:
-        event_title = UnciEvent.query.filter_by(id=event_id).first().title
-    except SQLAlchemyError:
-        flash("Ocorreu um erro ao acessar informações do evento.")
-        event_title = "Evento"
-    return render_template('event/admin/admin_home.html', event_title=event_title)
+    return render_template('event/event_home.html', sub_events=sub_events, event_id=event_id)
 
 
 @event_route.route('/<event_id>/edit', methods=['GET', 'PUT'])
@@ -117,16 +103,17 @@ def event_edit(event_id):
             db.session.commit()
 
         except SQLAlchemyError:
-            flash('Sinto muito... ocorreu um erro ao atualizar as informações do evento...')
+            flash(
+                'Sinto muito... ocorreu um erro ao atualizar as informações do evento...')
             return redirect(url_for('event.home', event_id=event_id))
-        
+
         flash("Evento atualizado com sucesso!")
         return redirect(url_for('event.home', event_id=event_id))
-    
+
     if not UnciEvent.query.filter_by(id=event_id).first():
         flash("Evento não encontrado! procure o setor tecnico se tiver certeza que digitou um url correto!")
         return redirect(url_for('home'))
-    
+
     try:
         event = UnciEvent.query.filter_by(id=event_id).first()
     except SQLAlchemyError:
@@ -136,7 +123,7 @@ def event_edit(event_id):
     return render_template('event/admin/edit.html', event=event)
 
 
-@event_route.route('/<event_id>/deletar', methods=['GET','DELETE'])
+@event_route.route('/<event_id>/deletar', methods=['GET', 'DELETE'])
 @login_required
 @admin_or_above
 def event_delete(event_id):
@@ -146,7 +133,8 @@ def event_delete(event_id):
             db.session.delete(delete_event)
             db.session.commit()
         except SQLAlchemyError:
-            flash("Ocorreu um erro ao tentar deletar um evento... se persistir, procure o setor de T.I!")
+            flash(
+                "Ocorreu um erro ao tentar deletar um evento... se persistir, procure o setor de T.I!")
             return jsonify(deleted=False)
 
         return jsonify(deleted=True)
@@ -157,9 +145,5 @@ def event_delete(event_id):
     except SQLAlchemyError:
         flash("Ocorreu um erro ao tentar acessar as informações do evento para sua exclusão! Caso persista, procucar setor de T.I!")
         return redirect(url_for('event.home', event_id=event_id))
-    
+
     return render_template('event/admin/delete.html', event=delete_event)
-
-
-
-

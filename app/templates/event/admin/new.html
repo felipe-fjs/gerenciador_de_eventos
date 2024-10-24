@@ -14,7 +14,7 @@
         
     {% endif %}
     <h1>Novo evento</h1>
-    <form action="{{ url_for('event.new')}}" method="post">
+    <form action="{{ url_for('event.event_new')}}" method="post">
         <p>
             <label for="title">Título</label>
             <input type="text" name="title" id="title" max="180" required>

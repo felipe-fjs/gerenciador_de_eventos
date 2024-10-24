@@ -12,6 +12,16 @@
             <p>{{ message }}</p>
         {% endfor %}
     {% endif %}
-    
+
+
+    {% if events %}
+        {% for event in events %}
+        <a href="{{ url_for('event.event_home', event_id=event.id) }}">
+            {{ event.title}}
+        </a>
+        {% endfor %}
+    {% else %}
+        <h1>Nenhnum evento cadastrado.</h1>
+    {% endif %}
 </body>
 </html>

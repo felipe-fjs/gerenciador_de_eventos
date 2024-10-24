@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% set messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+    {% if roles %}
+    <table>
+        <thead>
+            <tr>
+                <th>nível de permissão</th>
+                <th>nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for role in roles %}
+                <tr>
+                    <td>{{ role.permission_level }}</td>
+                    <td>{{ role.role }}</td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    {% else %}
+        <h1>nenhum nível adicionado. <a href="{{ url_for('coor.new_role') }}">Adicione um</a></h1>
+    {% endif %}
+
+</body>
+</html>

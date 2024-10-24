@@ -6,12 +6,18 @@
     <title>Document</title>
 </head>
 <body>
+    {% set messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
     {% if sub_events %}
         {% for sub_event in sub_events %}
             {{ sub_event }}
         {% endfor %}
     {% else %}
-        <h1>Nenhum sub_evento ainda foi cadastrado!</h1>
+        <h1>Nenhum sub_evento ainda foi cadastrado!  <a href="{{ url_for('sub_event.sub_event_new', event_id=event_id) }}">Registre um</a></h1>
     {% endif %}
 </body>
 </html>
