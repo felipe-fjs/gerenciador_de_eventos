@@ -28,7 +28,7 @@ class SubEvent(db.Model):
     id = Column(Integer, primary_key=True)
     event_id = Column(Integer, ForeignKey('events.id'), nullable=False)
     title = Column(String(255), nullable=False, default="Título não adicionado!")
-    desc = Column(String(255), nullable=False, default="Descrição de eventos não adicionada!")
+    desc = Column(Text(500), nullable=False, default="Descrição de eventos não adicionada!")
     slug = Column(String(60), unique=True, nullable=False)
     start = Column(DateTime(), nullable=False, default=None)
     end = Column(DateTime(), nullable=False, default=None)
