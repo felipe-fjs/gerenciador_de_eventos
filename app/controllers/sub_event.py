@@ -21,7 +21,7 @@ sub_event_route = Blueprint('sub_event', __name__)
 def sub_event_home(event_id, subevent_id):
     try:
         if not UnciEvent.query.filter_by(id=event_id).first():
-            flash("Nenhum evento com esse id foi encontrado!")
+            flash("Nenhum evento com esse ID foi encontrado!")
             return redirect(url_for('home'))
 
         if not SubEvent.query.filter_by(id=subevent_id).first():
@@ -33,7 +33,7 @@ def sub_event_home(event_id, subevent_id):
     except SQLAlchemyError:
         flash("ocorreu um erro ao acessar o sub evento...")
 
-    return render_template('sub_event/info.html')
+    return render_template('sub_event/info.html', sub_event=sub_event)
 
 
 @sub_event_route.route('/<event_id>/novo', methods=['GET','POST'])
