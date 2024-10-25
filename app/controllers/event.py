@@ -1,9 +1,8 @@
 from app import app, db
 from flask import Blueprint, flash, redirect, url_for, render_template, request, jsonify
-from flask_login import current_user, login_required
+from flask_login import login_required
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.event import UnciEvent, SubEvent
-from app.models.colab import EventColab, Colab
 from app.controllers.decorators.roles import admin_or_above, coor_required, there_is_coor, there_is_colab, colab_role
 from datetime import datetime
 
@@ -18,12 +17,9 @@ OK    * /nome_evento/editar (get e put): edita as informações DO EVENTO EM SI
 OK    * /nome_evento/deletar (delete): realiza a exclusão (ou suspensão) de um evento  [talvez deixe para ser feito pelos técnicos]
 
 """
-
-
 def is_admin_or_coor(event_id):
     if there_is_coor() or (there_is_colab(event_id) and colab_role() == 3):
         return True
-
 
 @app.route('/')
 @app.route('/inicio')
@@ -48,17 +44,16 @@ def home():
 @coor_required
 def event_new():
     if request.method == 'POST':
-        if UnciEvent.query.filter_by(slug=request.form.get('slug')).first():
-            flash('Slug de evento já registrado!')
-            return redirect(url_for('event.event_new'))
-
-        new_event = UnciEvent(title=request.form.get('title'),
-                              desc=request.form.get('desc'),
-                              slug=request.form.get('slug'),
-                              start=request.form.get('start'),
-                              end=request.form.get('end'))
-
         try:
+            if UnciEvent.query.filter_by(slug=request.form.get('slug')).first():
+                flash('Slug de evento já registrado!')
+                return redirect(url_for('event.event_new'))
+
+            new_event = UnciEvent(title=request.form.get('title'),
+                                desc=request.form.get('desc'),
+                                slug=request.form.get('slug'),
+                                start=request.form.get('start'),
+                                end=request.form.get('end'))
             db.session.add(new_event)
             db.session.commit()
         except SQLAlchemyError:
@@ -73,11 +68,11 @@ def event_new():
 
 @event_route.route('/<event_id>')
 def event_home(event_id):
-    if not UnciEvent.query.filter_by(id=event_id).first():
-        flash("Nenhum evento foi encontrado com esse id!")
-        return redirect(url_for('home'))
-
     try:
+        if not UnciEvent.query.filter_by(id=event_id).first():
+            flash("Nenhum evento foi encontrado com esse ID!")
+            return redirect(url_for('home'))
+        
         sub_events = SubEvent.query.filter_by(event_id=event_id).all()
     except SQLAlchemyError:
         flash("Ocorreu um erro ao acessar o evento.")
@@ -109,12 +104,13 @@ def event_edit(event_id):
 
         flash("Evento atualizado com sucesso!")
         return redirect(url_for('event.home', event_id=event_id))
-
-    if not UnciEvent.query.filter_by(id=event_id).first():
-        flash("Evento não encontrado! procure o setor tecnico se tiver certeza que digitou um url correto!")
-        return redirect(url_for('home'))
-
+    
+    # METHOD == GET
     try:
+        if not UnciEvent.query.filter_by(id=event_id).first():
+            flash("Evento não encontrado! procure o setor tecnico se tiver certeza que digitou um url correto!")
+            return redirect(url_for('home'))
+        
         event = UnciEvent.query.filter_by(id=event_id).first()
     except SQLAlchemyError:
         flash('Ocorreu um erro ao acessar as informações do evento! Se persistir, consulte o setor de T.I!')
