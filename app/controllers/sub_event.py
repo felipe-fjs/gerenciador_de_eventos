@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, redirect, url_for, render_template, request
 from flask_login import login_required
 from sqlalchemy.exc import SQLAlchemyError
+from app import db
 from app.models.event import SubEvent, UnciEvent
 from app.controllers.decorators.roles import admin_or_above, colab_or_above
 
@@ -41,7 +42,26 @@ def sub_event_home(event_id, subevent_id):
 @admin_or_above
 def sub_event_new(event_id):
     if request.method == 'POST':
-        pass
+        try:
+            sub_event = SubEvent(event_id=event_id,
+                                 title=request.form.get('title'),
+                                 desc=request.form.get('desc'),
+                                 slug=request.form.get('slug'),
+                                 start=request.form.get('start'),
+                                 end=request.form.get('end'),
+                                 classroom=request.form.get('classroom'))
+            
+            if SubEvent.query.filter_by(slug=sub_event.slug).first():
+                flash('Essa slug já está registrada!')
+                # Essa template só será utilizada quando um erro ocorreu ou uma slug já existir (talvez criar uma api no futuro pra verificar isso já no formulário)
+                return render_template('sub_event/admin/erro_new.html', sub_event=sub_event)
+            
+            db.session.add(sub_event)
+            db.session.commit()
+            
+        except SQLAlchemyError:
+            flash(f'Ocorreu um erro ao tentar criar um novo sub_evento')
+            return render_template('sub_event/admin/erro_new.html', sub_event=sub_event)
 
     return render_template("sub_event/admin/new.html")
 
