@@ -6,6 +6,8 @@
     <title>Document</title>
 </head>
 <body>
+    {% include 'partials/coor_nav.html'%}
+
     {% set messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}

@@ -1,0 +1,15 @@
+<nav>
+    <a href="{{ url_for('home') }}">Eventos ativos</a>
+
+    {% if current_user.is_authenticated %}
+        {% if verify_coor_colab() and verify_coor_colab().is_coor %}
+            <a href="{{ url_for('coor.coor_home')}}">Início de coordenadores</a>
+        {% endif %}
+        <a href="{{ url_for('account.qrcode')}}">Meu qrcode</a>
+        <a href="#">Meu perfil</a>
+        <a href="{{ url_for('account.logout')}}">Sair</a>
+    {% else %}
+        <a href="{{ url_for('account.login')}}">Fazer Login</a>
+        <a href="{{ url_for('account.signup')}}">Cadastrar-se</a>
+    {% endif %}
+</nav>

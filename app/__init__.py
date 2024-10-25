@@ -15,6 +15,9 @@ migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 
+login_manager.login_view = 'account.login'
+login_manager.login_message = 'Você precisa estar logado para acessar esse link!'
+
 from app.models.user import User, UserType, UserProfile
 from app.models.colab import ColabRole, ColabArea, Colab, EventColab
 from app.models.event import UnciEvent, SubEvent
@@ -24,7 +27,7 @@ from app.controllers.event import event_route
 from app.controllers.sub_event import sub_event_route
 from app.controllers.colab import colab_route
 from app.controllers.coor import coor_route
-app.register_blueprint(account_route, url_prefix='/account')
+app.register_blueprint(account_route)
 app.register_blueprint(event_route)
 app.register_blueprint(sub_event_route)
 app.register_blueprint(colab_route)
