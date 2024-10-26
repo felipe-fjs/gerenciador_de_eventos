@@ -26,7 +26,7 @@ class SubEvent(db.Model):
     __tablename__ = 'sub_events'
 
     id = Column(Integer, primary_key=True)
-    event_id = Column(Integer, ForeignKey('events.id'), nullable=False)
+    event_id = Column(Integer, ForeignKey('events.id', ondelete='CASCADE'), nullable=False)
     title = Column(String(255), nullable=False, default="Título não adicionado!")
     desc = Column(Text(500), nullable=False, default="Descrição de eventos não adicionada!")
     slug = Column(String(60), unique=True, nullable=False)
