@@ -66,7 +66,7 @@ def sub_event_new(event_id):
     return render_template("sub_event/admin/new.html")
 
 
-@sub_event_route.route('/<event_id>/<subevent_id>/editar', method=['GET', 'PUT'])
+@sub_event_route.route('/<event_id>/<subevent_id>/editar', methods=['GET', 'PUT'])
 @login_required
 @admin_or_above
 def sub_event_edit(event_id, subevent_id):
@@ -110,11 +110,39 @@ def sub_event_edit(event_id, subevent_id):
     return render_template("sub_event/admin/new.html", sub_event=sub_event)
 
 
-@sub_event_route.route('/<event_id>/<subevent_id>/delete')
+@sub_event_route.route('/<event_id>/<subevent_id>/delete', methods=['GET', 'DELETE'])
 @login_required
 @admin_or_above
-def sub_event_delete(subevent_id):
-    pass
+def sub_event_delete(event_id, subevent_id):
+    if request.method == 'DELETE':
+        try:
+            sub_event = SubEvent.query.filter_by(id=subevent_id, event_id=event_id).first()
+            if not sub_event:
+                flash("Sub evento não encontrado!")
+                return redirect(url_for("event.event_home", event_id=event_id))
+
+            db.session.delete(sub_event)
+            db.session.commit()
+            
+        except SQLAlchemyError:
+            flash(f'Ocorreu um erro ao tentar excluir um sub_evento!')
+            return redirect(url_for('event.event_home', event_id=event_id))
+        
+        flash("Sub evento excluido com sucesso!")
+        return redirect(url_for("sub_event.event_home", event_id=event_id))
+
+    try:
+        sub_event = SubEvent.query.filter_by(id=subevent_id, event_id=event_id).first()
+
+        if not SubEvent.query.filter_by(id=subevent_id, event_id=event_id).first():
+            flash("Sub evento não encontrado!")
+            return redirect(url_for('event.event_home', event_id=event_id))
+
+    except SQLAlchemyError:
+        flash("Ocorreu um erro ao acessar as informações do sub evento!")
+        return redirect(url_for('event.event_home', event_id=event_id))
+
+    return render_template('sub_event/admin/delete.html', sub_event=sub_event)
 
 
 # @sub_event_route.route('/<event_id>/subevent_id>/scanner', methods=['GET','POST'])
