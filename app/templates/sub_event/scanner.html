@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="{{ url_for('static', filename='js/qr-scanner.min.js')}}" type="module"></script>
+    <style>
+        #camera {
+            width: auto;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <video id="camera"></video>
+    <div id="user_info">
+        <p>
+            <label for="user_id">ID:</label>
+            <input type="text" name="user_id" id="user_id" disabled>
+        </p>
+        <p>
+            <label for="name">Nome:</label>
+            <input type="text" name="name" id="name" disabled>
+        </p>
+        <p>
+            <label for="email">Email: </label>
+            <input type="text" name="email" id="email" disabled>
+        </p>
+    </div>
+    <p id="error">
+        
+    </p>
+    <script type="module">
+        import QrScanner from "{{ url_for('static', filename='js/qr-scanner.min.js')}}"
+        const video = document.getElementById('camera')
+
+        
+        const scanner = new QrScanner(video, result => {
+            // realiza a busca do usuário
+            const scanner_url = "{{ url_for('sub_event.scanner') }}"
+            alert(`conteudo: ${result.data}`)
+            fetch(`${scanner_url}/${result.data}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(
+                data => {
+                    if (data['error']) {
+                        document.getElementById('error').innerText = data['error']
+        
+                    }
+                    if (data['success']) {
+                        document.getElementById('user_id').value = data['user_id']
+                        document.getElementById('name').value = data['name']
+                        document.getElementById('email').value = data['email']
+
+                    }
+                }
+            )
+            .catch(error => console.error(error))
+            scanner.stop()
+
+        }, {
+            returnDetailedScanResult: true,
+            willReadFrequently :true,
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+        })
+        QrScanner.hasCamera().then(hasCamera => {
+            if (hasCamera) {
+                scanner.start()
+            } else {
+                document.getElementById("error").innerText = 'Nenhuma camera foi detectada!'
+            }
+        })
+        // Inicia a câmera
+
+
+    </script>
+</body>
+</html>

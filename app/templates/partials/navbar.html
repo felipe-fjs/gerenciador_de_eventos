@@ -4,6 +4,7 @@
     {% if current_user.is_authenticated %}
         {% if verify_coor_colab() and verify_coor_colab().is_coor %}
             <a href="{{ url_for('coor.coor_home')}}">Início de coordenadores</a>
+            <a href="{{ url_for('event.event_new')}}">Novo evento</a>
         {% endif %}
         <a href="{{ url_for('account.qrcode')}}">Meu qrcode</a>
         <a href="#">Meu perfil</a>

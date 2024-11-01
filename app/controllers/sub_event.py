@@ -1,9 +1,11 @@
-from flask import Blueprint, flash, redirect, url_for, render_template, request
+from flask import Blueprint, flash, redirect, url_for, render_template, request, jsonify
 from flask_login import login_required
 from sqlalchemy.exc import SQLAlchemyError
-from app import db
+from app import db, app
 from app.models.event import SubEvent, UnciEvent
+from app.models.user import UserProfile
 from app.controllers.decorators.roles import admin_or_above, colab_or_above
+import jwt
 
 
 sub_event_route = Blueprint('sub_event', __name__)
@@ -146,8 +148,26 @@ def sub_event_delete(event_id, subevent_id):
 
 
 # @sub_event_route.route('/<event_id>/subevent_id>/scanner', methods=['GET','POST'])
-@sub_event_route.route('/scanner', methods=['GET','POST'])
+@sub_event_route.route('/scanner', methods=['GET','POST'], defaults={'jwt_info': None})
+@sub_event_route.route('/scanner/<jwt_info>', methods=['GET','POST'])
 @login_required
 @colab_or_above
-def scanner():
-    return "<h1>Acesso ao scanner </h1>"
+def scanner(jwt_info):
+    if request.method == 'POST':
+        pass
+    
+    if jwt_info:
+        decode = jwt.decode(jwt=jwt_info, key=app.config.get('SECRET_KEY'), algorithms='HS256')
+        try:
+            user_profile = UserProfile.query.filter_by(user_id=decode['id']).first()
+        except SQLAlchemyError:
+            return jsonify(error='Ocorreu um erro ao recuperar informações do usuário')
+        if not user_profile:
+            return jsonify(error='Nenhum usuário localizado com ese Qr Code!')
+        
+        return jsonify(success=True,
+            user_id=user_profile.user_id,
+            name=user_profile.get_fullname(),
+            email=user_profile.get_email(),
+        )
+    return render_template('sub_event/scanner.html')

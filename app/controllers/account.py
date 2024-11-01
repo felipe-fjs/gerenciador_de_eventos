@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from sqlalchemy.exc import SQLAlchemyError
+from app import app
 from app.models.user import User, UserProfile, UserType
 from app.models.colab import Colab
 from app import bcrypt, db, login_manager
 from flask_login import login_required, logout_user, login_user, current_user
+import jwt
 
 
 account_route = Blueprint('account', __name__)
@@ -97,8 +99,24 @@ def reset_pwd():
 def new_pwd():
     pass
 
+# se for ser adicionado a função de refazer o qrcode a cada x segundos,
+# deverá ser utilizado o async e websocket
+def generate_qrcode_info(user):
+    return jwt.encode(payload={'id':user.id, 'email':user.email},
+                      key=app.config.get('SECRET_KEY'),
+                      algorithm='HS256')
 
 @account_route.route('/qrcode')
 @login_required
 def qrcode():
+    jwt_info = generate_qrcode_info(current_user)
+    return render_template('account/qrcode.html', jwt=jwt_info)
+
+@account_route.route('/perfil')
+@login_required
+def profile():
+    pass
+
+@account_route.route('/imagem_de_perfil_de_usuario/<int:id>')
+def get_img_profile(id):
     pass

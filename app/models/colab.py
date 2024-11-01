@@ -1,4 +1,6 @@
 from app import db, app
+from .user import UserProfile
+from .event import SubEvent
 from flask_login import current_user
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, event, UniqueConstraint, func
 import datetime
@@ -53,11 +55,19 @@ class EventColab(db.Model):
 
     __table_args__ = (UniqueConstraint('user_id', 'event_id', name="colab_already_in_this_event"),)
 
+    def get_profile(self):
+        return UserProfile.query.filter_by(user_id=self.user_id).first()
+
     def take_role(self):
         return ColabRole.query.filter_by(id=self.role).first().role
     
     def take_area(self):
         return ColabArea.query.filter_by(id=self.area).first().name
+    
+    def get_sub_events(self):
+        # sub_events = SubEvent.query.filter_by(event_colab_id=self.id,
+                                            #   )
+        return
 
 class SubEventColab(db.Model):
     __tablename__ = 'sub_event_colabs'

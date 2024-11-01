@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% include "partials/navbar.html"}
+    <form>
+        <img src="{{ url_for('account.get_img_profile', user_id=colab.user_id)}}" alt="">
+        {% colab_profile = colab.get_profile() %}
+        <p>
+            <label for="name">Nome:</label>
+            <input type="text" name="name" id="name" value="{{ colab_profile.get_fullname() }}" disabled>
+        </p>
+        <p>
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" value="{{ colab_profile.get_email() }}" disabled>
+        </p>
+        <p>
+            <label for="user_type">É aluno:</label>
+            {% if colab_profile.user_type == 'aluno' %}
+                <input type="text" name="user_type" id="user_type" value="Sim" disabled>
+                <label for="curso">Curso:</label>
+                <input type="text" name="curso" id="curso" value="{{ colab.}}">
+            {% else %}
+                <input type="text" name="user_type" id="user_type" value="Não" disabled>
+            {% endif %}
+        </p>
+        <p>
+            
+        </p>
+    </form>
+</body>
+</html>

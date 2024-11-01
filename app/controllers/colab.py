@@ -3,7 +3,7 @@ from flask_login import login_required
 from sqlalchemy.exc import SQLAlchemyError
 from .decorators.roles import admin_or_above
 from ..models.colab import EventColab, ColabArea, ColabRole
-from ..models.event import UnciEvent
+from ..models.event import UnciEvent, SubEvent
 
 colab_route = Blueprint('colab', __name__)
 
@@ -27,7 +27,7 @@ colab_route = Blueprint('colab', __name__)
 @colab_route.route('/<int:event_id>/colabs')
 @login_required
 @admin_or_above
-def event_colabs(event_id):
+def colabs(event_id):
     try:
         if not UnciEvent.query.filter_by(id=event_id).first():
             flash(("Nenhum evento ativo com esse id."))
@@ -53,3 +53,21 @@ def new_colab(event_id):
         return redirect(url_for('home'))
     
     return render_template('colab/new_colab.html', event_id=event_id, areas=areas, roles=roles)
+
+@colab_route.route('/<int:event_id>/colab/<int:colab_id>')
+@login_required
+@admin_or_above
+def get_colab(event_id, colab_id):
+    try:
+        colab = EventColab.query.filter_by(user_id=colab_id, event_id=event_id).first()
+        if not colab:
+            flash('Colaborador do eventos não encontrado.')
+            return redirect(url_for('colab.colabs'))
+        
+        colab_sub_events = sub
+        
+    except SQLAlchemyError:
+        flash("Ocorreu um erro ao acessar as informações do colaborador do evento.")
+        return redirect(url_for('colab.colabs'))
+    
+    return render_template('colab/get_colab.html', colab=colab)

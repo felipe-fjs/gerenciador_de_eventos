@@ -70,6 +70,11 @@ class UserProfile(db.Model):
         self.user_type = user_type
         self.curso = curso
 
+    def get_fullname(self):
+        return self.first_name + self.last_name
+    
+    def get_email(self):
+        return User.query.filter_by(id=self.user_id).first().email
 
 @event.listens_for(UserProfile, 'before_update')
 def update_time(mapper, connection, target):
