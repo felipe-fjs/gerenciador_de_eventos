@@ -154,6 +154,7 @@ def sub_event_delete(event_id, subevent_id):
 @colab_or_above
 def scanner(jwt_info):
     if request.method == 'POST':
+        
         pass
     
     if jwt_info:
@@ -170,4 +171,5 @@ def scanner(jwt_info):
             name=user_profile.get_fullname(),
             email=user_profile.get_email(),
         )
+
     return render_template('sub_event/scanner.html')

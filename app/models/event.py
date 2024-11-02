@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, UniqueConstraint
 
 
 class UnciEvent(db.Model):
@@ -34,3 +34,11 @@ class SubEvent(db.Model):
     end = Column(DateTime(), nullable=False, default=None)
     classroom = Column(String(20), nullable=False, default="Local de evento não atribuído!")
     
+class SubEventViewer(db.Model):
+    __tablename__  = 'sub_event_viewers'
+
+    id = Column(Integer, primary_key=True)
+    sub_event_id = Column(Integer, ForeignKey('sub_events.id', ondelete='CASCADE'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+
+    __table_args__ = (UniqueConstraint('sub_event_id', 'user_id', name="user_already_in_this_sub_event"),)
