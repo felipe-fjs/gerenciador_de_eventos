@@ -1,28 +1,20 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOGIN</title>
-</head>
-<body>
-    {% set messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            {{ message}}
-        {% endfor %}
-    {% endif %}
-    <form action="{{ url_for('account.login' )}}" method="post">
+{% extends "account/sign-base.html" %}
+
+{% block form %}
+    <form action="{{ url_for('account.login') }}" method="post">
         <p>
-            <label for="email">Email: </label>
-            <input type="email" name="email" id="email">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
         </p>
         <p>
-            <label for="pwd">Senha: </label>
-            <input type="password" name="pwd" id="pwd">
+            <label for="pwd">Senha</label>
+            <input type="password" name="pwd" id="pwd" class="form-control" required>
         </p>
-        <button type="submit">Entrar</button>
-        <a href="{{ url_for('account.signup')}}">Cadastrar-se</a>
+        <p>
+            <button type="submit" class="btn btn-success">Entrar</button>
+            <a href="{{ url_for('account.signup') }}" class="text-reset text-decoration-none">Registre-se</a>
+            <a href="{{ url_for('account.reset_pwd')}}" id="reset_pwd">Esqueceu a senha?</a>
+
+        </p>
     </form>
-</body>
-</html>
+{% endblock %}
