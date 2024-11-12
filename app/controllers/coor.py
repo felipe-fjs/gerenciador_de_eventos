@@ -139,7 +139,7 @@ def new_area():
 
         return redirect(url_for('coor.get_areas'))
 
-    return render_template('colab/area/new_area.html')
+    return render_template('coor/area/new_area.html')
 
 @coor_route.route('/editar_area/<area_id>', methods=['POST', 'GET'])
 @login_required

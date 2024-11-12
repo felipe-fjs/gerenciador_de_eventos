@@ -1,0 +1,24 @@
+{% extends "account/base.html" %}
+
+{% block form %}
+<form action="{{ url_for('account.complete_signup')}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{ user.id }}">
+    <p>
+        <label for="img_profile" class="form-label">Foto de perfil</label>
+        <input type="file" accept=".jpg , .jpeg, .png" name="img_profile" id="img_profile" class="form-control">
+    </p>
+    <p>
+        <label for="user_type" class="form-label">Você é </label>
+        <select name="user_type" id="user_type" class="form-select" required>
+            {% for type in user_types %}
+                <option value="{{ type.id }}">{{ type.name }}</option>  
+            {% endfor %}
+        </select>
+    </p>
+    <button type="submit" class="btn btn-success">Registrar-se</button>
+</form>
+
+<script>
+    
+</script>
+{% endblock %}

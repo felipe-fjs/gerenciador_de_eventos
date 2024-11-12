@@ -6,6 +6,7 @@
     <title>Document</title>
 </head>
 <body>
+    {% include "partials/navbar.html" %}
     <form action="{{ url_for('coor.new_area')}}" method="post">
         <p>
             <label for="area">Área:</label>

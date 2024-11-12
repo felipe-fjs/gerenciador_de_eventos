@@ -1,56 +1,36 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup</title>
-</head>
-<body>
-    {% set messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            {{ message }}
-        {% endfor %}
-    {% endif %}
+{% extends "account/base.html" %}
 
-    <form action="{{ url_for('account.signup')}}" method="post">
-        <p>
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email">
-        </p>
-        <p>
-            <label for="first-name">Primeiro Nome</label>
-            <input type="text" name="first-name" id="first-name">
-        </p>
-        <p>
-            <label for="last-name">Sobrenome: </label>
-            <input type="text" name="last-name" id="last-name">
-        </p>
-        <p>
-            <label for="profile-img">Foto para perfil:</label>
-            <input type="file" name="profile-img" id="profile-img">
-        </p>
-        <p>
-            <label for="unci-student">Você é:?</label>
-            <select name="user_type" id="user_type">
-                {% for type in user_types %}
-                    <option value="{{ type.id }}">{{ type.name }}</option>  
-                {% endfor %}
-            </select>
-        </p>
-        <p id="curso_input">
-            <label for="curso">Curso:</label>
-            <input type="text" name="curso" id="curso">
-        </p>
-        <p>
-            <label for="pwd">Senha:</label>
-            <input type="password" name="pwd" id="pwd">
-        </p>
-        <p>
-            <label for="check-pwd">Repita a senha: </label>
-            <input type="password" name="check-pwd" id="check-pwd">
-        </p>
-        <button type="submit">Cadastrar</button>
-    </form>
-</body>
-</html>
+{% block form %}
+{% set messages = get_flashed_messages() %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<form action="{{ url_for('account.signup')}}" method="post">
+    <p>
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" name="email" id="email" class="form-control" required>
+    </p>
+    <p>
+        <label for="first-name" class="form-label">Primeiro Nome</label>
+        <input type="text" name="first-name" id="first-name" class="form-control" required>
+    </p>
+    <p>
+        <label for="last-name" class="form-label">Sobrenome: </label>
+        <input type="text" name="last-name" id="last-name" class="form-control" required>
+    </p>
+    <p>
+        <label for="pwd" class="form-label">Senha:</label>
+        <input type="password" name="pwd" id="pwd" class='form-control'>
+    </p>
+    <p>
+        <label for="check-pwd" class="form-label">Repita a senha: </label>
+        <input type="password" name="check-pwd" id="check-pwd" class='form-control'>
+    </p>
+    <p>
+        <button type="submit" class="btn btn-primary">Continuar</button>
+        <a href="{{ url_for('account.login') }}" class="text-reset text-decoration-none">Fazer login</a>
+    </p>
+</form>
+{% endblock %}

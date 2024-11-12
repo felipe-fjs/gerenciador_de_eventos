@@ -9,11 +9,11 @@
         <p>
             <label for="pwd">Senha</label>
             <input type="password" name="pwd" id="pwd" class="form-control" required>
+            <a href="{{ url_for('account.reset_pwd')}}" id="reset_pwd">Esqueceu a senha?</a>
         </p>
         <p>
             <button type="submit" class="btn btn-success">Entrar</button>
             <a href="{{ url_for('account.signup') }}" class="text-reset text-decoration-none">Registre-se</a>
-            <a href="{{ url_for('account.reset_pwd')}}" id="reset_pwd">Esqueceu a senha?</a>
 
         </p>
     </form>

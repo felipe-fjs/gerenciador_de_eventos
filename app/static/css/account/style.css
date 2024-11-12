@@ -13,6 +13,7 @@ body, html {
 }
 
 main {
+    padding: 10px;
     height: 100%;
     background-color: rgba(43, 101, 236, 0.5);
 
@@ -44,7 +45,7 @@ div#unci-logo {
 .form-control {
     background-color: rgba(255, 255, 255, 0.75);
     box-shadow: 0 0 1.2px rgba(0, 0, 0, 0.485);
-    transition: box-shadow .5s ease-in-out;
+    transition: box-shadow 0.7s ease-in-out;
 }
 
 .form-control:hover {
@@ -53,6 +54,7 @@ div#unci-logo {
 
 #reset_pwd {
     float: right;
+    font-size: 12px;
 }
 
 a.text-decoration-none:hover {
@@ -61,7 +63,24 @@ a.text-decoration-none:hover {
 
 @media screen and (min-width:620px) {
     .form-background {
-        width: 590px;
+        width: 500px;
         transition: width .5s ease-in-out;
     }
+}
+
+.hide {
+    display: none;
+}
+
+/* PARA PROFILE */
+.profile-section {
+    margin: auto;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-img {
+    width: 240px ;
 }

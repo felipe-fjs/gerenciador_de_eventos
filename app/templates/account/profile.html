@@ -1,0 +1,26 @@
+{% extends "account/base.html" %}
+
+
+{% block form %}
+    <section class="profile-section">
+        <img class="profile-img" src="{{ url_for('account.get_img_profile', id=current_user.id, _external=True) }}" alt="" srcset="">
+    </section>
+    <section>
+        <p>
+            <label for="name">Nome</label>
+            <input type="text" name="name" id="name" class="form-control" disabled value="{{ profile.get_fullname() }}">
+        </p>
+        <p>
+            <label for="email">Email</label>
+            <input type="email" name="email"  class="form-control" disabled value="{{ profile.get_email() }}">
+        </p> 
+        <p>
+            <label for="cert">Certificados</label>
+            {% if certs %}
+                <h1 name="cert">Certificados</h1>
+            {% else %}
+                <h5 name="cert">Nenhum certificado encontrado</h5>
+            {% endif %}
+        </p>   
+    </section>
+{% endblock %}

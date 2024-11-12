@@ -1,15 +1,15 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, session, send_file, send_from_directory
 from sqlalchemy.exc import SQLAlchemyError
 from app import app
-from app.models.user import User, UserProfile, UserType
+from app.models.user import User, UserProfile, UserType, generate_img_name
 from app.models.colab import Colab
 from app import bcrypt, db, login_manager
 from flask_login import login_required, logout_user, login_user, current_user
 import jwt
+import os
 
 
 account_route = Blueprint('account', __name__)
-
 
 def send_email_confirmation():
     pass
@@ -47,7 +47,11 @@ def signup():
             return redirect(url_for('account.signup'))
 
         # parte para envio de email, tentar aplicar de forma assincrona ou fila de tarefas (rabbit ou algo do tipo)
-        return redirect(url_for('account.login'))
+
+        session['PROFILE_NOT_COMPLETED'] = True
+        login_user(new_user)
+
+        return redirect(url_for('account.complete_signup', id=new_user.id))
 
     try:
         user_types = UserType.query.all()
@@ -115,8 +119,23 @@ def qrcode():
 @account_route.route('/perfil')
 @login_required
 def profile():
-    pass
+    try:
+        user_profile = UserProfile.query.filter_by(user_id=current_user.id).first()
+    except SQLAlchemyError:
+        flash("Ocorreu um erro ao acessar informações do perfil.")
+        return redirect(url_for('home'))
+    
+    return render_template('account/profile.html', profile=user_profile)
 
-@account_route.route('/imagem_de_perfil_de_usuario/<int:id>')
+
+@account_route.route('/profile_img/<int:id>')
 def get_img_profile(id):
-    pass
+    try:
+        user_profile = UserProfile.query.filter_by(user_id=id).first()
+
+        # return send_file(url_for('static', filename=f'images/profile/{user_profile.profile_img}'))
+    except SQLAlchemyError:
+        flash("Erro")
+        return redirect(url_for('home'))
+    return send_from_directory(directory='static/images/profile', path=user_profile.profile_img)
+    

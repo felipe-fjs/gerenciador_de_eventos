@@ -2,6 +2,8 @@ from app import db, bcrypt
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, event
 from flask_login import UserMixin
 import datetime
+import os
+import uuid
 
 
 def current_time():
@@ -28,6 +30,15 @@ class UserType(db.Model):
     __tablename__ = 'user_types'
     id = Column(Integer, primary_key=True)
     name = Column(String(60), nullable=False)
+
+
+def generate_img_name(file):
+        if not file:
+            return '0'
+        
+        ext = os.path.splitext(file)[-1]
+        uuid_id = uuid.uuid4()
+        return f"{uuid_id}{ext}"
 
 
 class UserProfile(db.Model):
@@ -61,12 +72,12 @@ class UserProfile(db.Model):
     active = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime(), default=current_time, nullable=False)
     updated_at = Column(DateTime(), default=current_time, nullable=False)
-
+    
     def __init__(self, user_id, first_name, last_name, user_type, profile_img='', curso=None,):
         self.user_id = user_id
         self.first_name = first_name
         self.last_name = last_name
-        self.profile_img = profile_img
+        self.profile_img = generate_img_name(profile_img)
         self.user_type = user_type
         self.curso = curso
 
@@ -75,6 +86,10 @@ class UserProfile(db.Model):
     
     def get_email(self):
         return User.query.filter_by(id=self.user_id).first().email
+    
+    def set_img(self, img):
+        self.profile_img = generate_img_name(img)
+
 
 @event.listens_for(UserProfile, 'before_update')
 def update_time(mapper, connection, target):
