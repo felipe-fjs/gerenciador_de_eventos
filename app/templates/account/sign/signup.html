@@ -1,4 +1,4 @@
-{% extends "account/base.html" %}
+{% extends "account/sign/base.html" %}
 
 {% block form %}
 {% set messages = get_flashed_messages() %}
@@ -7,6 +7,9 @@
         <div class="alert alert-warning">{{ message }}</div>
     {% endfor %}
 {% endif %}
+<a href="https://www.uncisal.edu.br/" title="Ir para o site da Uncisal">
+    <div id="unci-logo"></div>
+</a>
 <form action="{{ url_for('account.signup')}}" method="post">
     <p>
         <label for="email" class="form-label">Email:</label>

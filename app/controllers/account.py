@@ -58,7 +58,7 @@ def signup():
     except SQLAlchemyError:
         user_types= "Não foi possivel recureperar os tipos. Editar no perfil depois!"
 
-    return render_template("account/signup.html", user_types=user_types)
+    return render_template("account/sign/signup.html", user_types=user_types)
 
 
 @account_route.route('/login', methods=['GET', 'POST'])
@@ -83,7 +83,7 @@ def login():
         return redirect(url_for('home')) # colocar redirect para home dos eventos
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    return render_template('account/login.html')
+    return render_template('account/sign/login.html')
 
 
 @account_route.route('/logout')
@@ -114,7 +114,7 @@ def generate_qrcode_info(user):
 @login_required
 def qrcode():
     jwt_info = generate_qrcode_info(current_user)
-    return render_template('account/qrcode.html', jwt=jwt_info)
+    return render_template('account/logged/qrcode.html', jwt=jwt_info)
 
 @account_route.route('/perfil')
 @login_required
@@ -125,7 +125,7 @@ def profile():
         flash("Ocorreu um erro ao acessar informações do perfil.")
         return redirect(url_for('home'))
     
-    return render_template('account/profile.html', profile=user_profile)
+    return render_template('account/logged/profile.html', profile=user_profile)
 
 
 @account_route.route('/profile_img/<int:id>')
@@ -135,7 +135,11 @@ def get_img_profile(id):
 
         # return send_file(url_for('static', filename=f'images/profile/{user_profile.profile_img}'))
     except SQLAlchemyError:
-        flash("Erro")
+        flash("Erro ao recuperar perfil do usuário")
         return redirect(url_for('home'))
+    
+    if not user_profile.profile_img:
+        return send_from_directory(directory='static/images/profile', path='default.png')
+    
     return send_from_directory(directory='static/images/profile', path=user_profile.profile_img)
     

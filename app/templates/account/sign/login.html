@@ -1,6 +1,9 @@
-{% extends "account/sign-base.html" %}
+{% extends "account/sign/base.html" %}
 
 {% block form %}
+    <a href="https://www.uncisal.edu.br/" title="Ir para o site da Uncisal">
+        <div id="unci-logo"></div>
+    </a>
     <form action="{{ url_for('account.login') }}" method="post">
         <p>
             <label for="email">Email</label>

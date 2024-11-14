@@ -1,0 +1,17 @@
+{% extends "account/base.html" %}
+
+{% block form %}
+<div id="qrcode"></div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/qrcode.js')}}"></script>
+<script>
+    var qrcode = new QRCode(document.getElementById('qrcode'),{
+        text: "{{ jwt }}",
+        width:  300,
+        height:  300,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+    
+</script>
+{% endblock %}
