@@ -70,6 +70,7 @@ class UserProfile(db.Model):
     user_type = Column(Integer, ForeignKey("user_types.id"), nullable=True)
     curso = Column(String(100), nullable=True, default='não aluno')
     active = Column(Boolean, nullable=False, default=True)
+    completed = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime(), default=current_time, nullable=False)
     updated_at = Column(DateTime(), default=current_time, nullable=False)
     
