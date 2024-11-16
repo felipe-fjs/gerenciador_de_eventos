@@ -169,7 +169,6 @@ def get_img_profile(id):
     try:
         user_profile = UserProfile.query.filter_by(user_id=id).first()
 
-        # return send_file(url_for('static', filename=f'images/profile/{user_profile.profile_img}'))
     except SQLAlchemyError:
         flash("Erro ao recuperar perfil do usuário")
         return redirect(url_for('home'))
