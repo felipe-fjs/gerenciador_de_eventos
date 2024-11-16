@@ -1,8 +1,8 @@
 {% extends "account/sign/base.html" %}
 
 {% block form %}
-<form action="{{ url_for('account.complete_signup')}}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="id" value="{{ user.id }}">
+<form action="{{ url_for('account.complete_signup', user_id=user.id)}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="user_id" value="{{ user.id }}">
     <p>
         <label for="img_profile" class="form-label">Foto de perfil</label>
         <input type="file" accept=".jpg , .jpeg, .png" name="img_profile" id="img_profile" class="form-control">

@@ -1,6 +1,12 @@
 /* form-background >  */
 .form-background {
-    width: 90%;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 90%;
+    
+    /* width: 90%; */
     border-radius: 10px;
 }
 
@@ -13,6 +19,7 @@ div#unci-logo {
 }
 
 .form-section {
+    width: 100%;
     padding: 10px;
     background-color: rgb(255, 255, 255);
     border-radius: inherit;
@@ -40,7 +47,7 @@ a.text-decoration-none:hover {
 
 @media screen and (min-width:620px) {
     .form-background {
-        width: 500px;
+        flex-basis: 500px;
         transition: width .5s ease-in-out;
     }
 }
@@ -60,4 +67,11 @@ a.text-decoration-none:hover {
 
 .profile-img {
     width: inherit ;
+}
+
+/* PARA TEMPLATE QRCODE */
+div#qrcode{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

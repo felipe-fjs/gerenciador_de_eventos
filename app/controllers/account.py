@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, session, send_file, send_from_directory
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, session, send_from_directory
 from sqlalchemy.exc import SQLAlchemyError
 from app import app
 from app.models.user import User, UserProfile, UserType, generate_img_name
@@ -51,7 +51,7 @@ def signup():
         session['PROFILE_NOT_COMPLETED'] = True
         login_user(new_user)
 
-        return redirect(url_for('account.complete_signup', id=new_user.id))
+        return redirect(url_for('account.complete_signup', user_id=new_user.id))
 
     try:
         user_types = UserType.query.all()
@@ -60,6 +60,42 @@ def signup():
 
     return render_template("account/sign/signup.html", user_types=user_types)
 
+
+@account_route.route("/completar-conta", methods=['GET', 'POST'], defaults={'user_id': None})
+@account_route.route("/completar-conta/<user_id>", methods=['GET', 'POST'])
+@login_required
+def complete_signup(user_id):
+    if request.method == 'POST':
+        if not user_id:
+            user_id = request.form.get('user_id')
+            
+        try:
+            user_profile = UserProfile.query.filter_by(user_id=request.form.get('user_id')).first()
+        except SQLAlchemyError:
+            flash("Ocorreu um erro ao acessar as informações do perfil.")
+            return redirect(url_for('account.login'))
+        
+        img = request.files.get('img_profile')
+        img_path = generate_img_name(img.filename)
+        try:
+            user_profile.user_type = request.form.get('user_type')
+            user_profile.profile_img = img_path
+            db.session.commit()
+            img.save(f"{app.static_folder}/images/profile/{img_path}")
+            print(f"IMAGEM SALVA {img_path}")
+        except SQLAlchemyError:
+            flash('Houve um erro ao tentar salvar as informações no perfil.')
+            db.session.rollback()
+            return redirect(url_for('home'))
+
+    try: 
+        user = User.query.filter_by(id=user_id).first()
+        user_type = UserType.query.all()
+    except SQLAlchemyError:
+        flash("ocorreu um erro ao tentar completar seu perfil!")
+        return redirect(url_for("account.logout"))
+
+    return render_template('account/sign/signup-part2.html', user=user, user_types=user_type)
 
 @account_route.route('/login', methods=['GET', 'POST'])
 def login():

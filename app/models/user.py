@@ -34,7 +34,7 @@ class UserType(db.Model):
 
 def generate_img_name(file):
         if not file:
-            return '0'
+            return 'default.png'
         
         ext = os.path.splitext(file)[-1]
         uuid_id = uuid.uuid4()

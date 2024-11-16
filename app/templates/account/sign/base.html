@@ -8,9 +8,15 @@
 
     <div class="form-background">
         <section class="form-section">
-            <!-- <a href="https://www.uncisal.edu.br/" title="Ir para o site da Uncisal"> -->
-                <!-- <div id="unci-logo"></div> -->
-            <!-- </a> -->
+            {% set messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <a href="https://www.uncisal.edu.br/" title="Ir para o site da Uncisal">
+                <div id="unci-logo"></div>
+            </a>
             {% block form %}
 
             {% endblock %}
