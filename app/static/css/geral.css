@@ -10,29 +10,31 @@
 body, html {
     max-width: 100vw;
     height: 100vh;
+    background-color: #303030;
 }
-
+/* PARA NAVBAR */
 header {
-    height: 50px;
+    /* background-color: none; */
 }
-
-.navbar-geral {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+.navbar {
     background-color: #2B65EC;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 5px;
+    padding: 0;
+    
+ }
+
+ .uncisal-nav-icon {
+    float: right;
     height: 50px;
-}
-.navbar-link-section {
-    margin: auto;
+    padding: 2px;
 }
 
-.navbar-link {
-
+.navbar-toggler-icon {
     color: white;
 }
 
+/* PARA MAIN */
 main {
     min-height: calc(100vh - 80px);
 
@@ -44,7 +46,7 @@ main {
 
     background-color: #303030   ;
 }
-
+/* PARA FOOTER */
 footer {
     height: 30px;
     position: static;

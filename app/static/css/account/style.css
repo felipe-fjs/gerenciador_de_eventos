@@ -4,9 +4,8 @@
     flex-flow: row;
     justify-content: center;
     align-items: center;
-    flex-basis: 90%;
+    flex-basis: 95%;
     
-    /* width: 90%; */
     border-radius: 10px;
 }
 
