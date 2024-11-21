@@ -36,7 +36,7 @@ def get_roles():
         flash('Houve um erro ao recuperar as informações de nível.')
         return redirect(url_for('coor.coor_home'))
 
-    return render_template('coor/roles.html', roles=roles)
+    return render_template('coor/role/roles.html', roles=roles)
 
 @coor_route.route('/nova_funcao', methods=['POST', 'GET'])
 @login_required
@@ -53,7 +53,7 @@ def new_role():
             flash(f'Ocorreu um erro ao registrar a função/nível "{role.role}"')
             return redirect(url_for('coor.new_role'))
 
-    return render_template('colab/new_role.html')
+    return render_template('colab/role/new_role.html')
 
 @coor_route.route('/editar_nivel/<role_id>', methods=['POST', 'GET'])
 @login_required
@@ -80,7 +80,7 @@ def edit_role(role_id):
         flash('ocorreu um erro ao acessar os dados desse nível.')
         return redirect(url_for('coor.get_roles'))
 
-    return render_template('coor/edit_role.html', area=area)
+    return render_template('coor/role/edit_role.html', area=area)
 
 @coor_route.route('/deletar_nivel/<role_id>', methods=['POST', 'GET'])
 @login_required

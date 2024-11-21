@@ -1,17 +1,23 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% include "partials/navbar.html"%}
-    <ul>
-        <li><a href="{{ url_for('coor.get_areas')}}">Ver areas registradas</a></li>
-        <li><a href="{{ url_for('coor.get_roles')}}">Ver níveis de permissão registradss</a></li>
-        <li><a href="{{ url_for('coor.new_area')}}">Registras nova área</a></li>
-        <li><a href="{{ url_for('coor.new_role')}}">Registras novo nível de permissão</a></li>
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Inicio coordenação {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/event/style.css')}}">
+{% endblock %}
+
+{% block content %}
+    <div class="option-card-section">
+        <a class="text text-reset option-card" href="{{ url_for('coor.get_areas')}}">Ver areas registradas</a> 
+        <a class="text text-reset option-card"  href="{{ url_for('coor.get_roles')}}">Ver níveis de permissão registrads</a>
+        <a class="text text-reset option-card" href="{{ url_for('coor.new_area')}}">Registrar nova área</a>       
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        var main = document.getElementById('main')
+        if (window.getComputedStyle(main).alignItems === "center") {
+                main.style.alignItems = 'flex-start'
+        }
+    </script>
+{% endblock %}
