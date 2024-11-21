@@ -1,23 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% set messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-    {% if sub_events %}
-        {% for sub_event in sub_events %}
-            {{ sub_event }}
-        {% endfor %}
-    {% else %}
-        <h1>Nenhum sub_evento ainda foi cadastrado!  <a href="{{ url_for('sub_event.sub_event_new', event_id=event_id) }}">Registre um</a></h1>
-    {% endif %}
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}{{ event_name }} {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/event/style.css')}}">
+{% endblock %}
+
+{% block content %}
+    <div class="event-card-section">
+        {% set messages = get_flashed_messages() %}
+        {% if messages %}
+            <section class="alert alert-warning">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </section>
+        {% endif %}
+        {% if sub_event %}
+            {% for sub_event in sub_event %}
+                <div class="option-card-background">
+                    <a href="{{ url_for('sub_event.sub_event_home', sub_event_id=sub_event.id) }}">
+                        <span class="option-card-title">
+                            {{ sub_event.title }}
+                        </span>
+                        <span class="option-card-date">
+                            INICIO: {{ sub_event.start }} | TERMINO: {{ sub_event.end }} | LOCAL: {{ sub_event.classroom}}
+                        </span>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="option-card no-event-card">
+                <span class="no-event-title">Nenhum evento encontrado!</span>
+            </div>
+        {% endif %}
+    </div>
+
+    {% endblock %}
+{% block script %}
+    <script>
+        var main = document.getElementById('main')
+        if (window.getComputedStyle(main).alignItems === "center") {
+                main.style.alignItems = 'flex-start'
+        }
+    </script>
+{% endblock %}
