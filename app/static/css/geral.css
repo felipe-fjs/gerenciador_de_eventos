@@ -22,6 +22,7 @@ header {
     border-bottom-right-radius: 5px;
     padding: 0;
     
+    box-shadow: 0 0 2px 0.1px black;
 }
 
  .uncisal-nav-icon {
@@ -45,6 +46,30 @@ main {
     padding: 10px;
 
     background-color: inherit   ;
+}
+
+.form-background {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 95%;
+    
+    border-radius: 10px;
+}
+
+@media screen and (min-width:620px) {
+    .form-background {
+        flex-basis: 500px;
+        transition: width .5s ease-in-out;
+    }
+}
+.form-section {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    border-radius: inherit;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.581);
 }
 
 .event-card-section {

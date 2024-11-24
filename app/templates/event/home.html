@@ -18,19 +18,34 @@
         </section> -->
         {% if events %}
             {% for event in events %}
-                <div class="option-card-background">
-                    <a href="{{ url_for('event.event_home', event_id=event.id) }}">
-                        <span class="event-card-title">
+                <div class="teste-card">
+                    <span class="card-info">
+                        <div class="card-slug">
+                            {{ event.slug }}
+                        </div>
+                        <!-- <div class="card-title">
                             {{ event.title }}
-                        </span>
-                        <span class="event-card-date">
-                            INICIO: {{ event.start }} | TERMINO: {{ event.end }}
-                        </span>
-                        <span class="event-card-icon">
-                            IMG <!--ADICIONAR FUNÇÃO para CHAMAR IMAGEM DO EVENTO event.get_img() , mm,,-->
-                        </span>
-                    </a>
+                        </div> -->
+                        <div class="card-period">
+                            INICIO: {{ event.get_start_day() }} | TERMINO: {{ event.get_end_day() }}
+                        </div>
+                    </span>
+                    <span class="card-icon">
+                        IMG<!-- ADICIONAR FUNÇÃO para CHAMAR IMAGEM DO EVENTO event.get_img() -->
+                    </span>
                 </div>
+
+                <!-- <a href="{{ url_for('event.event_home', event_id=event.id) }}" class="option-card">
+                    <span class="event-card-title">
+                        {{ event.title }}
+                    </span>
+                    <span class="event-card-date">
+                        INICIO: {{ event.start }} | TERMINO: {{ event.end }}
+                    </span>
+                    <span class="event-card-icon">
+                        IMG ADICIONAR FUNÇÃO para CHAMAR IMAGEM DO EVENTO event.get_img()
+                    </span>
+                </a> -->
             {% endfor %}
         {% else %}
             <div class="option-card no-event-card">

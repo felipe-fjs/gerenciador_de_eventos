@@ -1,14 +1,4 @@
 /* form-background >  */
-.form-background {
-    display: flex;
-    flex-flow: row;
-    justify-content: center;
-    align-items: center;
-    flex-basis: 95%;
-    
-    border-radius: 10px;
-}
-
 div#unci-logo {
     background: url(../../images/logo-uncisal.png) no-repeat;
     background-size: contain;
@@ -17,18 +7,11 @@ div#unci-logo {
     margin: 5px auto;
 }
 
-.form-section {
-    width: 100%;
-    padding: 10px;
-    background-color: rgb(255, 255, 255);
-    border-radius: inherit;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.581);
-}
-
 .form-control {
     background-color: rgba(255, 255, 255, 0.75);
     box-shadow: 0 0 1.2px rgba(0, 0, 0, 0.485);
-    transition: box-shadow 0.7s ease-in-out;
+
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .form-control:hover {
@@ -44,12 +27,6 @@ a.text-decoration-none:hover {
     text-decoration: solid blue ;
 }
 
-@media screen and (min-width:620px) {
-    .form-background {
-        flex-basis: 500px;
-        transition: width .5s ease-in-out;
-    }
-}
 
 .hide {
     display: none;

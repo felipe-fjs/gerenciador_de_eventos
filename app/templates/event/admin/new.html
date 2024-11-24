@@ -1,41 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% set messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-                {{ message }}
-        {% endfor %}
-        
-    {% endif %}
-    <h1>Novo evento</h1>
-    <form action="{{ url_for('event.event_new')}}" method="post">
-        <p>
-            <label for="title">Título</label>
-            <input type="text" name="title" id="title" max="180" required>
-        </p>
-        <p>
-            <label for="desc">Descrição</label>
-            <input type="text" name="desc" id="desc" required>
-        </p>
-        <p>
-            <label for="slug">Sigla e ano:</label>
-            <input type="text" name="slug" id="slug" required>
-        </p>
-        <p>
-            <label for="start">Começa em:</label>
-            <input type="datetime-local" name="start" id="start">
-        </p>
-        <p>
-            <label for="end">termina em:</label>
-            <input type="datetime-local" name="end" id="end">
-        </p>
-        <button type="submit">Cadastrar</button>
-    </form>
-</body>
-</html>
+{% extends "account/logged/base.html" %}
+
+{% block title %}Novo evento {% endblock %}
+
+{% block form %}
+<h1>Novo evento</h1>
+<form action="{{ url_for('event.event_new')}}" method="post">
+    <p>
+        <label for="title" class="form-label">Título</label>
+        <input type="text" class="form-control" name="title" id="title" max="180" required>
+    </p>
+    <p>
+        <label for="desc" class="form-label">Descrição</label>
+        <input type="text" class="form-control" name="desc" id="desc" required>
+    </p>
+    <p>
+        <label for="slug" class="form-label">Sigla e ano:</label>
+        <input type="text" class="form-control" name="slug" id="slug" required>
+    </p>
+    <p>
+        <label for="start" class="form-label">Começa em:</label>
+        <input type="datetime-local" class="form-control" name="start" id="start">
+    </p>
+    <p>
+        <label for="end" class="form-label">termina em:</label>
+        <input type="datetime-local" class="form-control" name="end" id="end">
+    </p>
+    <button type="submit" class="btn btn-success">Cadastrar</button>
+</form>
+{% endblock %}

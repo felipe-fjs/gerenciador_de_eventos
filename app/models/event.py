@@ -1,6 +1,6 @@
 from app import db
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, UniqueConstraint
-
+import datetime
 
 class UnciEvent(db.Model):
     """ 
@@ -21,7 +21,13 @@ class UnciEvent(db.Model):
 
     def __str__(self):
         return f"Titulo: {self.title}; \ndesc: {self.desc}; \nslug: {self.slug}; \nstart: {self.start}; \nend: {self.end}"
+    
+    def get_start_day(self):
+        return f"{self.start.day}/{self.start.month}"
 
+    def get_end_day(self):
+        return f"{self.end.day}/{self.end.month}"
+    
 class SubEvent(db.Model):
     __tablename__ = 'sub_events'
 
